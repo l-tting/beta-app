@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="static/login.css">
+</head>
+
+<body>
+    <div class="conatiner" id="app">
+
+        <div class="form-structor">
+            <div class="signup">
+                <h2 class="form-title" id="signup"><span>or</span>Sign up</h2>
+                <form @submit.prevent="user_registration">
+                    <div class="form-holder">
+                       <input type="text" class="input" placeholder="Name" v-model="RegistrationDetails.username" />
+                       <input type="email" class="input" placeholder="Email" v-model="RegistrationDetails.email" />
+                       <input type="password" class="input" placeholder="Password" v-model="RegistrationDetails.password" />
+                    </div>
+                    <button class="submit-btn" type="submit">Sign up</button>
+                 </form>
+                 
+            </div>
+            <div class="login slide-up">
+                <div class="center">
+                    <h2 class="form-title" id="login"><span>or</span>Log in</h2>
+                    
+                        <form @submit.prevent="user_login">
+                            <div class="form-holder">
+                               <input type="text" class="input" placeholder="Username" v-model="LoginDetails.username" />
+                               <input type="password" class="input" placeholder="Password" v-model="LoginDetails.password" />
+                            </div>
+                            <button class="submit-btn" type="submit">Log in</button>
+                         </form>
+                         
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    Vue.createApp({
+        data() {
+            return {
+                url: 'http://127.0.0.1:5000/',
+                LoginDetails: {
+                    username: null,
+                    paswword: null
+
+                },
+                RegistrationDetails: {
+                    email: null,
+                    username: null,
+                    password: null
+                }
+            }
+        },
+        methods: {
+            user_login() {
+                try {
+                    axios.post(this.url + 'login', this.LoginDetails)
+                        .then((response) => {
+                            console.log(response)
+                            const token = response.data.access_token
+                            localStorage.setItem('access_token',token)
+                            window.location.href= "products.html"
+
+
+                        })
+                }
+                catch (error) {
+                    console.log("Error logging in", error)
+                }
+
+            },
+
+            user_registration() {
+                try {
+                    axios.post(this.url + 'register', this.RegistrationDetails)
+                        .then((response) => {
+                            console.log(response)
+                        })
+                }
+                catch (error) {
+                    console.log("Error registering user", error)
+                }
+            }
+        },
+        created() {
+
+        }
+    }).mount('#app')
+
+    console.clear();
+
+
+</script>
+<script src="static/login.js"></script>
+
+</html>
